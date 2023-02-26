@@ -4,7 +4,7 @@ import type { IUser } from '@/stores/user';
 import { computed } from 'vue';
 import type { ComputedRef } from 'vue';
 
-import LogoExtended from '@/components/icons/LogoExtended.vue';
+import Loader from '@/components/shared/Loader.vue';
 
 const userStore = useUserStore();
 const user: ComputedRef<IUser> = computed(() => {
@@ -19,6 +19,13 @@ const user: ComputedRef<IUser> = computed(() => {
     <pre>{{ user.name }}</pre>
     <pre>{{ user.email }}</pre>
 
-    <LogoExtended/>
+    <Loader class="loader"/>
   </main>
 </template>
+
+<style scoped>
+.loader {
+  width: 100px;
+  height: 100px;
+}
+</style>

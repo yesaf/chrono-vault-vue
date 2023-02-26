@@ -1,15 +1,20 @@
 <template>
-  <div class="auth-view">
-    <h1>Auth View</h1>
-  </div>
+  <main>
+    <AuthForm class="form-block" />
+  </main>
 </template>
 
-<script>
-export default {
-  name: 'AuthView',
-};
+<script setup lang="ts">
+import AuthForm from '@/components/auth/AuthForm.vue'
+
 </script>
 
 <style scoped>
-
+main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+}
 </style>
