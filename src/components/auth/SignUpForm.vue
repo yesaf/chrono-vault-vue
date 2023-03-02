@@ -89,7 +89,7 @@ const signUp = () => {
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 h1 {
   position: relative;
@@ -134,10 +134,10 @@ h1 {
   padding: 0 2px;
 
   outline: none;
-}
 
-.auth-input:focus {
-  border-bottom-width: 2px;
+  &:focus {
+    border-bottom-width: 2px;
+  }
 }
 
 .error {
@@ -166,10 +166,10 @@ h1 {
   user-select: none;
 
   margin-top: 33px;
-}
 
-.sign-up-btn:hover {
-  background-color: var(--color-primary-light);
+  &:hover {
+    background-color: var(--color-primary-light);
+  }
 }
 
 .login-text {
@@ -190,11 +190,9 @@ h1 {
   background-color: transparent;
   border: none;
   padding: 0;
+
+  &:hover {
+    text-decoration: none;
+  }
 }
-
-.login-btn:hover {
-  text-decoration: none;
-}
-
-
 </style>

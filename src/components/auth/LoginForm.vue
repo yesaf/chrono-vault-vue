@@ -81,7 +81,7 @@ watch([username, password], () => {
 
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 h1 {
   margin: 45px 0 0 0;
   font-size: 38px;
@@ -125,33 +125,33 @@ hr {
   align-items: center;
   justify-content: center;
   user-select: none;
+
+  & > span {
+    margin-left: 15px;
+  }
+
+  & > .google-logo {
+    position: absolute;
+    left: 56px;
+
+    width: 24px;
+    height: 24px;
+    transition: width, height, left;
+    transition-duration: 0.4s;
+    transition-timing-function: ease-in-out;
+  }
+
+  &:hover {
+    background-color: var(--color-gray-light);
+
+  }
+
+  &:hover > .google-logo {
+    width: 30px;
+    height: 30px;
+    left: 53px;
+  }
 }
-
-.google-btn span {
-  margin-left: 15px;
-}
-
-.google-logo {
-  position: absolute;
-  left: 56px;
-
-  width: 24px;
-  height: 24px;
-  transition: width, height, left;
-  transition-duration: 0.4s;
-  transition-timing-function: ease-in-out;
-}
-
-.google-btn:hover {
-  background-color: var(--color-gray-light);
-}
-
-.google-btn:hover .google-logo {
-  width: 30px;
-  height: 30px;
-  left: 53px;
-}
-
 
 .inputs {
   display: flex;
@@ -217,12 +217,14 @@ hr {
   user-select: none;
 
   margin: 20px 0 15px;
-}
 
-.login-btn:hover {
-  background-color: var(--color-primary-light);
-}
+  // animate rotating border on hover
+  &:hover {
+    background-color: var(--color-primary-light);
 
+  }
+
+}
 .sign-up {
   font-size: 16px;
   font-weight: 400;
