@@ -3,6 +3,7 @@ import useUserStore from '@/stores/user';
 import type { IUser } from '@/stores/user';
 import { computed } from 'vue';
 import type { ComputedRef } from 'vue';
+import { RouterLink } from 'vue-router';
 
 import Loader from '@/components/shared/Loader.vue';
 
@@ -16,8 +17,7 @@ const user: ComputedRef<IUser> = computed(() => {
 <template>
   <main>
     <h1>Home View</h1>
-    <pre>{{ user.name }}</pre>
-    <pre>{{ user.email }}</pre>
+    <RouterLink to="auth">Go to Auth</RouterLink>
 
     <Loader class="loader"/>
   </main>
