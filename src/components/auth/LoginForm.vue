@@ -31,9 +31,16 @@
     Log in
   </button>
 
+
   <p>Don't have an account?
-    <button class="sign-up" @click="onSignUp">Sign up for free</button>
+    <button class="sign-up" @click="onSignUp">
+      Sign up for free
+    </button>
   </p>
+
+  <div v-if="loading" class="loader-bg">
+    <Loader class="loader"/>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -42,6 +49,8 @@ import type {PropType} from 'vue';
 import setRefOnChange from '@/utils/setRefOnChange';
 import focusNext from "@/utils/focusNext";
 import googleLogo from '@/assets/images/google-logo.svg';
+
+import Loader from '@/components/shared/Loader.vue';
 
 interface IProps {
   onLogin: (username: string, password: string) => void,
@@ -62,6 +71,8 @@ const props = defineProps({
 const login = () => {
   props.onLogin(username.value, password.value);
 }
+
+const loading = ref(false);
 
 const username = ref('');
 const password = ref('');
@@ -203,6 +214,8 @@ hr {
   width: 325px;
   height: 55px;
 
+  margin: 20px 0 15px;
+
   border: none;
   border-radius: 7px;
   background-color: var(--color-primary);
@@ -216,15 +229,11 @@ hr {
   justify-content: center;
   user-select: none;
 
-  margin: 20px 0 15px;
-
-  // animate rotating border on hover
   &:hover {
     background-color: var(--color-primary-light);
-
   }
-
 }
+
 .sign-up {
   font-size: 16px;
   font-weight: 400;
@@ -233,10 +242,30 @@ hr {
   background-color: transparent;
   border: none;
   padding: 0;
+
+  &:hover {
+    text-decoration: none;
+  }
 }
 
-.sign-up:hover {
-  text-decoration: none;
+.loader-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 30px;
+  background-color: var(--color-white);
+  opacity: 0.9;
 }
 
+.loader {
+  height: 150px;
+  width: 150px;
+}
 </style>

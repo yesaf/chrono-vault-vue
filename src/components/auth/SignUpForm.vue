@@ -34,6 +34,9 @@
 
   <p class="login-text">Already have an account? <button @click="onBack" class="login-btn">Log in</button></p>
 
+  <div v-if="loading" class="loader-bg">
+    <Loader class="loader"/>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -41,6 +44,10 @@ import {ref, watch} from "vue";
 import setRefOnChange from "@/utils/setRefOnChange";
 import focusNext from "@/utils/focusNext";
 import type {PropType} from "vue";
+
+import Loader from "@/components/shared/Loader.vue";
+
+const loading = ref(false);
 
 const email = ref('');
 const username = ref('');
@@ -194,5 +201,26 @@ h1 {
   &:hover {
     text-decoration: none;
   }
+}
+
+.loader-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 30px;
+  background-color: var(--color-white);
+  opacity: 0.9;
+}
+
+.loader {
+  height: 150px;
+  width: 150px;
 }
 </style>
