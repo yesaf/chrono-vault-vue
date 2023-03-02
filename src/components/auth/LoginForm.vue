@@ -13,11 +13,13 @@
   <div class="inputs">
     <input class="auth-input"
            type="text" :value="username"
-           @change="onUsernameChange"
+           @input="onUsernameChange"
+           @keypress.enter="focusNext"
            placeholder="Username">
     <input class="auth-input"
            type="password" :value="password"
-           @change="onPasswordChange"
+           @input="onPasswordChange"
+           @keypress.enter="login"
            placeholder="Password">
   </div>
 
@@ -37,7 +39,8 @@
 <script setup lang="ts">
 import {ref, watch} from 'vue';
 import type {PropType} from 'vue';
-import {onInputChange} from '@/utils/changeFuncs';
+import setRefOnChange from '@/utils/setRefOnChange';
+import focusNext from "@/utils/focusNext";
 import googleLogo from '@/assets/images/google-logo.svg';
 
 interface IProps {
@@ -63,10 +66,11 @@ const login = () => {
 const username = ref('');
 const password = ref('');
 
-const onUsernameChange = onInputChange(username);
-const onPasswordChange = onInputChange(password);
+const onUsernameChange = setRefOnChange(username);
+const onPasswordChange = setRefOnChange(password);
 
-const error = ref('All fields are required');
+const error = ref('');
+
 watch([username, password], () => {
   if (username.value.length > 0 && password.value.length > 0) {
     error.value = '';
@@ -103,13 +107,14 @@ hr {
 }
 
 .google-btn {
+  position: relative;
   display: flex;
   gap: 5px;
   padding: 0;
   height: 55px;
   width: 325px;
 
-  border: 1.5px solid var(--color-border);
+  border: 1px solid var(--color-border);
   border-radius: 7px;
   background-color: var(--color-white);
 
@@ -122,14 +127,31 @@ hr {
   user-select: none;
 }
 
-.google-btn:hover {
-  background-color: var(--color-gray);
+.google-btn span {
+  margin-left: 15px;
 }
 
 .google-logo {
+  position: absolute;
+  left: 56px;
+
   width: 24px;
   height: 24px;
+  transition: width, height, left;
+  transition-duration: 0.4s;
+  transition-timing-function: ease-in-out;
 }
+
+.google-btn:hover {
+  background-color: var(--color-gray-light);
+}
+
+.google-btn:hover .google-logo {
+  width: 30px;
+  height: 30px;
+  left: 53px;
+}
+
 
 .inputs {
   display: flex;

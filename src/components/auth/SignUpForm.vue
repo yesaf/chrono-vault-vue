@@ -10,13 +10,20 @@
   <div class="inputs">
     <input class="auth-input" type="email"
            placeholder="Email"
-           :value="email" @change="onEmailChange">
+           @keypress.enter="focusNext"
+           :value="email" @input="onEmailChange">
     <input class="auth-input" type="text"
            placeholder="Username"
-           :value="username" @change="onUsernameChange">
+           @keypress.enter="focusNext"
+           :value="username" @input="onUsernameChange">
     <input class="auth-input" type="password"
            placeholder="Password"
-           :value="password" @change="onPasswordChange">
+            @keypress.enter="focusNext"
+           :value="password" @input="onPasswordChange">
+    <input class="auth-input" type="password"
+           placeholder="Confirm password"
+            @keypress.enter="focusNext"
+            :value="passwordConfirm" @input="onPasswordConfirmChange">
   </div>
 
   <span class="error">{{ error }}</span>
@@ -31,25 +38,33 @@
 
 <script setup lang="ts">
 import {ref, watch} from "vue";
-import {onInputChange} from "@/utils/changeFuncs";
+import setRefOnChange from "@/utils/setRefOnChange";
+import focusNext from "@/utils/focusNext";
 import type {PropType} from "vue";
 
 const email = ref('');
 const username = ref('');
 const password = ref('');
+const passwordConfirm = ref('');
 
-const onEmailChange = onInputChange(email);
-const onUsernameChange = onInputChange(username);
-const onPasswordChange = onInputChange(password);
+const onEmailChange = setRefOnChange(email);
+const onUsernameChange = setRefOnChange(username);
+const onPasswordChange = setRefOnChange(password);
+const onPasswordConfirmChange = setRefOnChange(passwordConfirm);
 
-const error = ref('All fields are required');
+const error = ref('');
 
-watch([email, username, password], () => {
-  if (email.value.length > 0 && username.value.length > 0 && password.value.length > 0) {
-    error.value = '';
-  } else {
+watch([email, username, password, passwordConfirm], () => {
+  if (!email.value.length || !username.value.length ||
+      !password.value.length || !passwordConfirm.value.length) {
     error.value = 'All fields are required';
+  } else if (password.value !== passwordConfirm.value) {
+    error.value = 'Passwords do not match';
+  } else {
+    error.value = '';
   }
+
+
 });
 
 interface IProps {
@@ -99,10 +114,10 @@ h1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
+  gap: 24px;
   width: 100%;
 
-  margin-top: 50px;
+  margin-top: 30px;
 }
 
 .auth-input {
@@ -130,7 +145,7 @@ h1 {
   font-size: 16px;
   font-weight: 400;
   color: var(--color-error);
-  margin-top: 20px;
+  margin-top: 21px;
 }
 
 .sign-up-btn {
@@ -150,7 +165,7 @@ h1 {
   justify-content: center;
   user-select: none;
 
-  margin-top: 56px;
+  margin-top: 33px;
 }
 
 .sign-up-btn:hover {
@@ -164,6 +179,7 @@ h1 {
 
 .login-text {
   color: var(--color-subtext);
+  user-select: none;
 }
 
 .login-btn {

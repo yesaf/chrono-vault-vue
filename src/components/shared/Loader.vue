@@ -6,7 +6,7 @@
 .loader {
   background-repeat: no-repeat;
   background-position: center;
-  animation: loader 8s infinite;
+  animation: loader 7s infinite;
 }
 
 @keyframes loader {
