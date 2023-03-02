@@ -3,7 +3,7 @@
   <p>Continue with Google or enter your details.</p>
 
   <button class="google-btn">
-    <img :src="googleLogo" class="google-logo">
+    <img :src="googleLogo" alt="" class="google-logo">
     <span>Log in with Google</span>
   </button>
 
@@ -13,11 +13,11 @@
   <div class="inputs">
     <input class="auth-input"
            type="text" :value="username"
-           @change="username = $event.target.value"
+           @change="onUsernameChange"
            placeholder="Username">
     <input class="auth-input"
            type="password" :value="password"
-           @change="password = $event.target.value"
+           @change="onPasswordChange"
            placeholder="Password">
   </div>
 
@@ -35,16 +35,23 @@
 </template>
 
 <script setup lang="ts">
-import {ref, defineProps, watch} from 'vue';
+import {ref, watch} from 'vue';
+import type {PropType} from 'vue';
+import {onInputChange} from '@/utils/changeFuncs';
 import googleLogo from '@/assets/images/google-logo.svg';
+
+interface IProps {
+  onLogin: (username: string, password: string) => void,
+  onSignUp: () => void
+}
 
 const props = defineProps({
   onLogin: {
-    type: Function,
+    type: Function as PropType<IProps['onLogin']>,
     required: true
   },
   onSignUp: {
-    type: Function,
+    type: Function as PropType<IProps['onSignUp']>,
     required: true
   }
 });
@@ -56,12 +63,15 @@ const login = () => {
 const username = ref('');
 const password = ref('');
 
+const onUsernameChange = onInputChange(username);
+const onPasswordChange = onInputChange(password);
+
 const error = ref('All fields are required');
 watch([username, password], () => {
   if (username.value.length > 0 && password.value.length > 0) {
     error.value = '';
   } else {
-    error.value = 'Some error';
+    error.value = 'All fields are required';
   }
 });
 

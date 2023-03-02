@@ -10,13 +10,13 @@
   <div class="inputs">
     <input class="auth-input" type="email"
            placeholder="Email"
-           :value="email" @change="email = $event.target.value">
+           :value="email" @change="onEmailChange">
     <input class="auth-input" type="text"
            placeholder="Username"
-           :value="username" @change="username = $event.target.value">
+           :value="username" @change="onUsernameChange">
     <input class="auth-input" type="password"
            placeholder="Password"
-           :value="password" @change="password = $event.target.value">
+           :value="password" @change="onPasswordChange">
   </div>
 
   <span class="error">{{ error }}</span>
@@ -25,16 +25,22 @@
     Sign up
   </button>
 
-  <p class="login-text">Already have the account? <button @click="onBack" class="login-btn">Log in</button></p>
+  <p class="login-text">Already have an account? <button @click="onBack" class="login-btn">Log in</button></p>
 
 </template>
 
 <script setup lang="ts">
-import {defineProps, ref, watch} from "vue";
+import {ref, watch} from "vue";
+import {onInputChange} from "@/utils/changeFuncs";
+import type {PropType} from "vue";
 
 const email = ref('');
 const username = ref('');
 const password = ref('');
+
+const onEmailChange = onInputChange(email);
+const onUsernameChange = onInputChange(username);
+const onPasswordChange = onInputChange(password);
 
 const error = ref('All fields are required');
 
@@ -46,13 +52,18 @@ watch([email, username, password], () => {
   }
 });
 
+interface IProps {
+  onSignUp: (email: string, username: string, password: string) => void,
+  onBack: () => void
+}
+
 const props = defineProps({
   onSignUp: {
-    type: Function,
+    type: Function as PropType<IProps['onSignUp']>,
     required: true
   },
   onBack: {
-    type: Function,
+    type: Function as PropType<IProps['onBack']>,
     required: true
   }
 });
