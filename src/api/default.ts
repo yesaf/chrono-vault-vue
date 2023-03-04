@@ -1,11 +1,13 @@
 import axios from 'axios';
 
+const baseURL = import.meta.env.VITE_API_URL || '';
+
 export const apiClear = axios.create({
-    baseURL: 'http://207.154.249.61/api/v1',
+    baseURL,
 });
 
 const api = axios.create({
-    baseURL: 'http://207.154.249.61/api/v1',
+    baseURL,
     headers: {
         'Content-Type': 'application/json',
     }
