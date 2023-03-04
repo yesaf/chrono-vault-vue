@@ -18,21 +18,25 @@
            :value="username" @input="onUsernameChange">
     <input class="auth-input" type="password"
            placeholder="Password"
-            @keypress.enter="focusNext"
+           @keypress.enter="focusNext"
            :value="password" @input="onPasswordChange">
     <input class="auth-input" type="password"
            placeholder="Confirm password"
-            @keypress.enter="focusNext"
-            :value="passwordConfirm" @input="onPasswordConfirmChange">
+           @keypress.enter="focusNext"
+           :value="passwordConfirm" @input="onPasswordConfirmChange">
   </div>
 
-  <span class="error">{{ error }}</span>
+  <span class="error" :class="highlightError && 'highlight'">
+    {{ error }}
+  </span>
 
   <button class="sign-up-btn" @click="signUp">
     Sign up
   </button>
 
-  <p class="login-text">Already have an account? <button @click="onBack" class="login-btn">Log in</button></p>
+  <p class="login-text">Already have an account?
+    <button @click="onBack" class="login-btn">Log in</button>
+  </p>
 
   <div v-if="loading" class="loader-bg">
     <Loader class="loader"/>
@@ -44,6 +48,7 @@ import {ref, watch} from "vue";
 import setRefOnChange from "@/utils/setRefOnChange";
 import focusNext from "@/utils/focusNext";
 import type {PropType} from "vue";
+import {isEmail} from "@/utils/validators";
 
 import Loader from "@/components/shared/Loader.vue";
 
@@ -59,10 +64,20 @@ const onUsernameChange = setRefOnChange(username);
 const onPasswordChange = setRefOnChange(password);
 const onPasswordConfirmChange = setRefOnChange(passwordConfirm);
 
+const highlightError = ref(false);
+const setErrorHighlight = () => {
+  highlightError.value = true;
+  setTimeout(() => {
+    highlightError.value = false;
+  }, 500);
+};
+
 const error = ref('');
 
 watch([email, username, password, passwordConfirm], () => {
-  if (!email.value.length || !username.value.length ||
+  if (!isEmail(email.value)) {
+    error.value = 'Email is not valid';
+  } else if (!email.value.length || !username.value.length ||
       !password.value.length || !passwordConfirm.value.length) {
     error.value = 'All fields are required';
   } else if (password.value !== passwordConfirm.value) {
@@ -70,12 +85,10 @@ watch([email, username, password, passwordConfirm], () => {
   } else {
     error.value = '';
   }
-
-
 });
 
 interface IProps {
-  onSignUp: (email: string, username: string, password: string) => void,
+  onSignUp: (email: string, username: string, password: string) => Promise<any>,
   onBack: () => void
 }
 
@@ -91,7 +104,15 @@ const props = defineProps({
 });
 
 const signUp = () => {
-  props.onSignUp(email.value, username.value, password.value);
+  if (error.value.length || !username.value.length) {
+    setErrorHighlight();
+    return;
+  }
+  loading.value = true;
+  props.onSignUp(email.value, username.value, password.value).catch(() => {
+    loading.value = false;
+    error.value = 'User already exists';
+  });
 }
 
 </script>
@@ -153,6 +174,11 @@ h1 {
   font-weight: 400;
   color: var(--color-error);
   margin-top: 21px;
+  transition: font-size 0.4s ease-in-out;
+}
+
+.error.highlight {
+  font-size: 18px;
 }
 
 .sign-up-btn {

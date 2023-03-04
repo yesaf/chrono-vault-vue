@@ -10,9 +10,12 @@
 <script setup lang="ts">
 import LoginForm from '@/components/auth/LoginForm.vue';
 import SignUpForm from '@/components/auth/SignUpForm.vue';
+import authService from '@/api/services/auth';
+import {useRouter} from "vue-router";
 import {ref} from "vue";
 
 const activeForm = ref('login');
+const router = useRouter();
 
 const goToSignUp = () => {
   activeForm.value = 'signup';
@@ -23,11 +26,13 @@ const goToLogin = () => {
 }
 
 const login = (username: string, password: string) => {
-  console.log(username, password);
+  return authService.login(username, password)
+      .then(() => router.replace('/'));
 }
 
 const signUp = (email: string, username: string, password: string) => {
-  console.log(email, username, password);
+  return authService.signUp(email, username, password)
+      .then(() => router.replace('/'));
 }
 
 </script>

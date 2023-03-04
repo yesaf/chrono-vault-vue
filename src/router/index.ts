@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {createRouter, createWebHistory} from 'vue-router';
 import authService from '@/api/services/auth';
 import HomeView from '../views/HomeView.vue';
 import useUserStore from '@/stores/user';
@@ -21,18 +21,29 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
     const userStore = useUserStore();
-    if (to.name !== 'auth' && !localStorage.getItem('token')) {
-        authService.getMe().then((response) => {
-            if (response.data) {
-                userStore.setUser(response.data);
-                next();
-            } else {
-                next({ name: 'auth' });
-            }
-        });
-    } else {
-        next();
+    if (to.name !== 'auth') {
+        if (!localStorage.getItem('token')) {
+            router.replace({name: 'auth'});
+            return;
+        }
+        authService.me()
+            .then((user) => {
+                if (user) {
+                    userStore.setUser(user);
+                    next();
+                }
+            })
+            .catch(() => {
+                router.replace({name: 'auth'});
+            });
     }
+
+    // if (to.name === 'auth' && localStorage.getItem('token')) {
+    //     router.replace({name: 'home'})
+    //     return;
+    // }
+
+    next();
 });
 
 export default router;

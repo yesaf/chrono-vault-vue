@@ -1,22 +1,44 @@
+import api, {apiClear} from '../default';
+
 export interface IUser {
     email: string;
     name: string;
-
-}
-
-interface IResponse<T> {
-    data: T;
 }
 
 class AuthService {
+    public async login(username: string, password: string): Promise<string> {
+        return apiClear.post<string>('/token', {
+            username,
+            password,
+        }, {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            }
+        })
+            .then((response) => {
+                localStorage.setItem('token', response.data);
+                return response.data;
+            });
+    }
 
-    public getMe(): Promise<IResponse<IUser>> {
-        return Promise.resolve({
-            data: {
-                email: 'example@mail.com',
-                name: 'John Doe',
-            },
-        });
+    public async signUp(email: string, name: string, password: string): Promise<string> {
+        return apiClear.post<string>('/registration', {
+            email,
+            name,
+            password,
+        })
+            .then((response) => {
+                console.log('api', response)
+                localStorage.setItem('token', response.data);
+                return response.data;
+            });
+    }
+
+    public me(): Promise<IUser> {
+        return api.get<IUser>('/me')
+            .then((response) => {
+                return response.data;
+            });
     }
 }
 

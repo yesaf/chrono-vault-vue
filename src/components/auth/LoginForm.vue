@@ -12,10 +12,10 @@
 
   <div class="inputs">
     <input class="auth-input"
-           type="text" :value="username"
+           type="email" :value="email"
            @input="onUsernameChange"
            @keypress.enter="focusNext"
-           placeholder="Username">
+           placeholder="Email">
     <input class="auth-input"
            type="password" :value="password"
            @input="onPasswordChange"
@@ -23,7 +23,9 @@
            placeholder="Password">
   </div>
 
-  <span class="error">{{ error }}</span>
+  <span class="error" :class="highlightError && 'highlight'">
+    {{ error }}
+  </span>
 
   <a href="#" class="reset-password">Forgot password?</a>
 
@@ -51,10 +53,12 @@ import focusNext from "@/utils/focusNext";
 import googleLogo from '@/assets/images/google-logo.svg';
 
 import Loader from '@/components/shared/Loader.vue';
+import {isEmail} from "@/utils/validators";
 
 interface IProps {
-  onLogin: (username: string, password: string) => void,
-  onSignUp: () => void
+  onLogin: (username: string, password: string) => Promise<any>,
+  onSignUp: () => void,
+  authError: string
 }
 
 const props = defineProps({
@@ -68,27 +72,46 @@ const props = defineProps({
   }
 });
 
-const login = () => {
-  props.onLogin(username.value, password.value);
-}
 
 const loading = ref(false);
 
-const username = ref('');
+const email = ref('');
 const password = ref('');
 
-const onUsernameChange = setRefOnChange(username);
+const onUsernameChange = setRefOnChange(email);
 const onPasswordChange = setRefOnChange(password);
 
 const error = ref('');
+const highlightError = ref(false);
+const setErrorHighlight = () => {
+  highlightError.value = true;
+  setTimeout(() => {
+    highlightError.value = false;
+  }, 500);
+};
 
-watch([username, password], () => {
-  if (username.value.length > 0 && password.value.length > 0) {
+watch([email, password], () => {
+  if (email.value.length > 0 && password.value.length > 0) {
     error.value = '';
+  } else if (!isEmail(email.value)) {
+    error.value = 'Invalid email';
   } else {
     error.value = 'All fields are required';
   }
 });
+
+const login = () => {
+  if (error.value.length || !email.value.length) {
+    setErrorHighlight();
+    return;
+  }
+  loading.value = true;
+  props.onLogin(email.value, password.value)
+      .catch(() => {
+        loading.value = false;
+        error.value = 'Invalid username or password';
+      })
+}
 
 </script>
 
@@ -197,6 +220,11 @@ hr {
   font-weight: 400;
   color: var(--color-error);
   margin-bottom: 10px;
+  transition: font-size 0.4s ease-in-out;
+}
+
+.error.highlight {
+  font-size: 18px;
 }
 
 .reset-password {

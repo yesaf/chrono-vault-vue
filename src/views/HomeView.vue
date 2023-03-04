@@ -1,16 +1,11 @@
 <script setup lang="ts">
 import useUserStore from '@/stores/user';
-import type { IUser } from '@/stores/user';
-import { computed } from 'vue';
-import type { ComputedRef } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import Loader from '@/components/shared/Loader.vue';
 
 const userStore = useUserStore();
-const user: ComputedRef<IUser> = computed(() => {
-  return userStore.user;
-});
+console.log(userStore.user);
 
 </script>
 
