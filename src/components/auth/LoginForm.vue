@@ -91,12 +91,12 @@ const setErrorHighlight = () => {
 };
 
 watch([email, password], () => {
-  if (email.value.length > 0 && password.value.length > 0) {
-    error.value = '';
-  } else if (!isEmail(email.value)) {
+  if (!isEmail(email.value)) {
     error.value = 'Invalid email';
-  } else {
+  } else if (!email.value.length || !password.value.length) {
     error.value = 'All fields are required';
+  } else {
+    error.value = '';
   }
 });
 
