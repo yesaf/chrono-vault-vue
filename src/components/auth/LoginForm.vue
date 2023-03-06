@@ -3,7 +3,7 @@
   <p>Continue with Google or enter your details.</p>
 
   <GoogleLogin :callback="googleCallback"
-               :clientId="import.meta.env.VITE_GOOGLE_CLIENT_ID"
+               :clientId="GOOGLE_CLIENT_ID"
                :buttonConfig="{
     width: '325',
     logo_alignment: 'center',
@@ -89,6 +89,8 @@ interface IGoogleResponse {
 const googleCallback = (res: IGoogleResponse) => {
   props.onGoogleLogin(res.credential);
 };
+
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 
 const loading = ref(false);
 
