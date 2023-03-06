@@ -3,6 +3,7 @@
   <p>Continue with Google or enter your details.</p>
 
   <GoogleLogin :callback="googleCallback"
+               :clientId="import.meta.env.VITE_GOOGLE_CLIENT_ID"
                :buttonConfig="{
     width: '325',
     logo_alignment: 'center',
