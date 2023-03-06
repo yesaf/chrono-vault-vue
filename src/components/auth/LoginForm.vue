@@ -87,7 +87,14 @@ interface IGoogleResponse {
 }
 
 const googleCallback = (res: IGoogleResponse) => {
-  props.onGoogleLogin(res.credential);
+  props.onGoogleLogin(res.credential)
+      .catch(() => {
+        error.value = 'Google login failed';
+        setErrorHighlight();
+        setTimeout(() => {
+          error.value = '';
+        }, 1000);
+      });
 };
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
