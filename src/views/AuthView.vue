@@ -1,7 +1,10 @@
 <template>
   <main>
     <div class="auth-form">
-      <LoginForm v-if="activeForm === 'login'" :on-login="login" :on-sign-up="goToSignUp"/>
+      <LoginForm v-if="activeForm === 'login'"
+                 :on-login="login"
+                  :on-google-login="googleLogin"
+                 :on-sign-up="goToSignUp"/>
       <SignUpForm v-else :on-back="goToLogin" :on-sign-up="signUp"/>
     </div>
   </main>
@@ -27,6 +30,11 @@ const goToLogin = () => {
 
 const login = (username: string, password: string) => {
   return authService.login(username, password)
+      .then(() => router.replace('/'));
+}
+
+const googleLogin = (credential: string) => {
+  return authService.googleLogin(credential)
       .then(() => router.replace('/'));
 }
 

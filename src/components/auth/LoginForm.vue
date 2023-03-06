@@ -2,10 +2,12 @@
   <h1>Welcome back!</h1>
   <p>Continue with Google or enter your details.</p>
 
-  <button class="google-btn">
-    <img :src="googleLogo" alt="" class="google-logo">
-    <span>Log in with Google</span>
-  </button>
+  <GoogleLogin :callback="googleCallback"
+               :buttonConfig="{
+    width: '325',
+    logo_alignment: 'center',
+     text: 'continue_with'
+  }"/>
 
   <p>or</p>
   <hr>
@@ -50,13 +52,13 @@ import {ref, watch} from 'vue';
 import type {PropType} from 'vue';
 import setRefOnChange from '@/utils/setRefOnChange';
 import focusNext from "@/utils/focusNext";
-import googleLogo from '@/assets/images/google-logo.svg';
 
 import Loader from '@/components/shared/Loader.vue';
 import {isEmail} from "@/utils/validators";
 
 interface IProps {
   onLogin: (username: string, password: string) => Promise<any>,
+  onGoogleLogin: (credential: string) => Promise<any>,
   onSignUp: () => void,
   authError: string
 }
@@ -69,9 +71,23 @@ const props = defineProps({
   onSignUp: {
     type: Function as PropType<IProps['onSignUp']>,
     required: true
-  }
+  },
+  onGoogleLogin: {
+    type: Function as PropType<IProps['onGoogleLogin']>,
+    required: true
+  },
 });
 
+interface IGoogleResponse {
+  clientId: string,
+  client_id: string,
+  credential: string,
+  select_by: string,
+}
+
+const googleCallback = (res: IGoogleResponse) => {
+  props.onGoogleLogin(res.credential);
+};
 
 const loading = ref(false);
 
@@ -140,57 +156,10 @@ hr {
   background-color: var(--color-border);
 }
 
-.google-btn {
-  position: relative;
-  display: flex;
-  gap: 5px;
-  padding: 0;
-  height: 55px;
-  width: 325px;
-
-  border: 1px solid var(--color-border);
-  border-radius: 7px;
-  background-color: var(--color-white);
-
-  font-size: 19px;
-  font-weight: 500;
-  line-height: 24px;
-
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-
-  & > span {
-    margin-left: 15px;
-  }
-
-  & > .google-logo {
-    position: absolute;
-    left: 56px;
-
-    width: 24px;
-    height: 24px;
-    transition: width, height, left;
-    transition-duration: 0.4s;
-    transition-timing-function: ease-in-out;
-  }
-
-  &:hover {
-    background-color: var(--color-gray-light);
-
-  }
-
-  &:hover > .google-logo {
-    width: 30px;
-    height: 30px;
-    left: 53px;
-  }
-}
-
 .inputs {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 30px;
   margin: 20px 0 10px 0;
 }
 
@@ -296,4 +265,5 @@ hr {
   height: 150px;
   width: 150px;
 }
+
 </style>

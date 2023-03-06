@@ -6,10 +6,10 @@ export interface IUser extends IUserData {
     isLoaded: boolean;
 }
 
-const useUserStore = defineStore('user', () => {
+const useAccountStore = defineStore('account', () => {
     const user = ref<IUser>({
-        email: '',
-        name: '',
+        email: 'user@m.co',
+        name: 'User Full Name',
         isLoaded: false,
     });
 
@@ -23,4 +23,4 @@ const useUserStore = defineStore('user', () => {
     };
 })
 
-export default useUserStore;
+export default useAccountStore;

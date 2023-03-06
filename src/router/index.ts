@@ -1,7 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router';
 import authService from '@/api/services/auth';
 import HomeView from '../views/HomeView.vue';
-import useUserStore from '@/stores/user';
+import useAccountStore from '@/stores/account';
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,7 +20,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-    const userStore = useUserStore();
+    const userStore = useAccountStore();
     if (to.name !== 'auth') {
         if (!localStorage.getItem('token')) {
             router.replace({name: 'auth'});

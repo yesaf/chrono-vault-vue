@@ -40,6 +40,16 @@ class AuthService {
                 return response.data;
             });
     }
+
+    public googleLogin(credential: string): Promise<string> {
+        return api.post<string>('/swap_token', {
+            credential,
+        })
+            .then((response) => {
+                localStorage.setItem('token', response.data);
+                return response.data;
+            });
+    }
 }
 
 export default new AuthService();

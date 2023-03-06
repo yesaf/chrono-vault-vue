@@ -1,26 +1,31 @@
 <script setup lang="ts">
-import useUserStore from '@/stores/user';
 import { RouterLink } from 'vue-router';
 
+import SideMenu from '@/components/sideMenu/SideMenu.vue';
 import Loader from '@/components/shared/Loader.vue';
-
-const userStore = useUserStore();
-console.log(userStore.user);
-
 </script>
 
 <template>
-  <main>
-    <h1>Home View</h1>
-    <RouterLink to="auth">Go to Auth</RouterLink>
+  <div class="home-page">
+    <SideMenu/>
+    <main>
+      <h1>Home View</h1>
+      <RouterLink to="auth">Go to Auth</RouterLink>
 
-    <Loader class="loader"/>
-  </main>
+      <Loader class="loader"/>
+    </main>
+  </div>
 </template>
 
 <style scoped>
 .loader {
   width: 100px;
   height: 100px;
+}
+
+.home-page {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
 }
 </style>
